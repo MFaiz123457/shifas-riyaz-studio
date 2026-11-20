@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shifa's Raga & Riyaz Studio 🌸🎵</title>
+  <!-- Google Fonts: Quicksand & Plus Jakarta Sans for playful yet refined legibility -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas Confetti for celebratory milestones -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Quicksand"', 'sans-serif'],
+          },
+          colors: {
+            saffron: {
+              50: '#fff8f1',
+              100: '#feecdc',
+              200: '#fcd9bd',
+              300: '#fdba8c',
+              400: '#ff8a4c',
+              500: '#ff5a1f',
+            },
+            lotus: {
+              50: '#fdf2f8',
+              100: '#fce7f3',
+              200: '#fbcfe8',
+              300: '#f9a8d4',
+              400: '#f472b6',
+              500: '#ec4899',
+            },
+            sage: {
+              50: '#f2fbf5',
+              100: '#e1f6e8',
+              200: '#c3edd2',
+              300: '#94deb0',
+              400: '#5ec687',
+              500: '#38a866',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #fff8f1 0%, #fdf2f8 50%, #f2fbf5 100%);
+      min-height: 100vh;
+    }
+
+    /* Custom Animations for the Cute Plant & Musical Notes */
+    @keyframes floatNote {
+      0%, 100% { transform: translateY(0px) rotate(-4deg); opacity: 0.75; }
+      50% { transform: translateY(-10px) rotate(6deg); opacity: 1; }
+    }
+
+    @keyframes swayPlant {
+      0%, 100% { transform: rotate(-1.8deg); }
+      50% { transform: rotate(1.8deg); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(244, 114, 182, 0.45)); }
+      50% { filter: drop-shadow(0 0 18px rgba(251, 191, 36, 0.75)); }
+    }
+
+    @keyframes bounceSoft {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .animate-float-note {
+      animation: floatNote 3.2s ease-in-out infinite;
+    }
+
+    .animate-sway {
+      transform-origin: 150px 235px;
+      animation: swayPlant 4.5s ease-in-out infinite;
+    }
+
+    .animate-lotus-glow {
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+
+    .animate-bounce-soft {
+      animation: bounceSoft 2.4s ease-in-out infinite;
+    }
+
+    /* Subtle Indian Classical Mandala Watermark Pattern */
+    .mandala-bg {
+      background-image: radial-gradient(circle at 20% 20%, rgba(251, 207, 232, 0.25) 0%, transparent 45%),
+                        radial-gradient(circle at 80% 80%, rgba(253, 186, 140, 0.22) 0%, transparent 45%);
+    }
+
+    /* Smooth Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #fff8f1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #fbcfe8;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f9a8d4;
+    }
+  </style>
+</head>
+<body class="mandala-bg text-slate-800 antialiased selection:bg-lotus-200 selection:text-lotus-500">
+
+  <!-- Toast / Message Banner (No alert() used anywhere!) -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- Customize Studio Name Modal -->
+  <div id="name-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl shadow-2xl border border-lotus-100 max-w-md w-full p-6 transform transition-all">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-display text-xl font-bold text-slate-800 flex items-center gap-2">
+          <span>🪷</span> Personalize Your Studio
+        </h3>
+        <button onclick="closeNameModal()" class="p-2 rounded-full hover:bg-slate-100 text-slate-500 transition">✕</button>
+      </div>
+      <p class="text-sm text-slate-600 mb-4">Give your classical music studio your own special name!</p>
+      <input id="studio-name-input" type="text" maxlength="36" placeholder="e.g., Shifa's Raga & Riyaz Studio"
+        class="w-full px-4 py-3 rounded-2xl border border-lotus-200 focus:outline-none focus:ring-2 focus:ring-lotus-400 text-slate-800 font-medium mb-4" />
+      <div class="flex justify-end gap-2">
+        <button onclick="closeNameModal()" class="px-4 py-2.5 rounded-2xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition">Cancel</button>
+        <button onclick="saveStudioName()" class="px-5 py-2.5 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-lotus-400 to-saffron-400 hover:opacity-95 shadow-md transition">Save Name ✨</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+    <!-- Header Section -->
+    <header class="bg-white/85 backdrop-blur-md rounded-3xl shadow-sm border border-lotus-100 p-5 sm:p-6 mb-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <!-- Cute Decorative Lotus + Tanpura Emblem -->
+          <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-lotus-100 via-saffron-100 to-sage-100 flex items-center justify-center shadow-inner border border-white shrink-0">
+            <svg class="w-10 h-10" viewBox="0 0 64 64" fill="none">
+              <!-- Tanpura Neck -->
+              <rect x="30" y="6" width="4" height="34" rx="2" fill="#d97706"/>
+              <circle cx="32" cy="44" r="10" fill="#f59e0b"/>
+              <circle cx="32" cy="44" r="6" fill="#fef3c7"/>
+              <!-- Lotus Petals -->
+              <path d="M32 36C26 44 18 48 12 46C16 54 24 57 32 56C40 57 48 54 52 46C46 48 38 44 32 36Z" fill="#f472b6"/>
+              <path d="M32 32C28 40 22 46 18 48C22 53 27 55 32 55C37 55 42 53 46 48C42 46 36 40 32 32Z" fill="#fbcfe8"/>
+              <!-- Musical Note -->
+              <path d="M45 12V22M45 12L52 10V20" stroke="#ec4899" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="43" cy="22" r="2.5" fill="#ec4899"/>
+              <circle cx="50" cy="20" r="2.5" fill="#ec4899"/>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h1 id="studio-title" class="font-display text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-lotus-500 via-saffron-500 to-amber-600 bg-clip-text text-transparent">
+                Shifa's Raga & Riyaz Studio
+              </h1>
+              <button onclick="openNameModal()" title="Customize Studio Name" class="p-1.5 rounded-xl bg-lotus-50 hover:bg-lotus-100 text-lotus-500 text-xs font-bold transition">
+                ✏️ Edit
+              </button>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5 flex items-center gap-2 flex-wrap">
+              <span>Sa • Re • Ga • Ma • Pa • Dha • Ni • Sa</span>
+              <span class="hidden sm:inline text-lotus-300">|</span>
+              <span class="text-sage-500 font-semibold">✨ Every day of Riyaz grows your musical garden!</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Backup / Export & Audio Chime Toggle -->
+        <div class="flex items-center gap-2 self-start md:self-center flex-wrap">
+          <button id="sound-toggle-btn" onclick="toggleSoundEffects()" class="px-3.5 py-2 rounded-2xl bg-sage-50 hover:bg-sage-100 text-sage-500 border border-sage-200 text-xs font-bold flex items-center gap-1.5 transition">
+            <span id="sound-icon">🔔</span> <span id="sound-label">Chimes On</span>
+          </button>
+          <button onclick="exportBackupJSON()" class="px-3.5 py-2 rounded-2xl bg-saffron-50 hover:bg-saffron-100 text-saffron-500 border border-saffron-200 text-xs font-bold flex items-center gap-1.5 transition">
+            <span>💾</span> Backup JSON
+          </button>
+        </div>
+      </div>
+
+      <!-- Top Summary Stats Strip -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-5 border-t border-lotus-100/80">
+        <div class="bg-gradient-to-br from-lotus-50 to-white rounded-2xl p-3.5 border border-lotus-100 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-lotus-100 text-lotus-500 flex items-center justify-center text-lg font-bold">🎼</div>
+          <div>
+            <div class="text-xs font-semibold text-slate-500">Raagas Learned</div>
+            <div id="stat-raagas" class="font-display text-xl font-extrabold text-slate-800">0</div>
+          </div>
+        </div>
+        <div class="bg-gradient-to-br from-saffron-50 to-white rounded-2xl p-3.5 border border-saffron-100 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-saffron-100 text-saffron-500 flex items-center justify-center text-lg font-bold">🎤</div>
+          <div>
+            <div class="text-xs font-semibold text-slate-500">Songs Learned</div>
+            <div id="stat-songs" class="font-display text-xl font-extrabold text-slate-800">0</div>
+          </div>
+        </div>
+        <div class="bg-gradient-to-br from-amber-50 to-white rounded-2xl p-3.5 border border-amber-100 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg font-bold">⭐</div>
+          <div>
+            <div class="text-xs font-semibold text-slate-500">Mastered Pieces</div>
+            <div id="stat-mastered" class="font-display text-xl font-extrabold text-slate-800">0</div>
+          </div>
+        </div>
+        <div class="bg-gradient-to-br from-sage-50 to-white rounded-2xl p-3.5 border border-sage-100 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-sage-100 text-sage-500 flex items-center justify-center text-lg font-bold">🌱</div>
+          <div>
+            <div class="text-xs font-semibold text-slate-500">Riyaz Streak</div>
+            <div class="font-display text-xl font-extrabold text-sage-500"><span id="stat-streak">0</span> Days</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Navigation Tabs -->
+    <nav class="flex gap-2 sm:gap-3 mb-6 bg-white/75 backdrop-blur-sm p-2 rounded-3xl border border-lotus-100 shadow-sm">
+      <button id="tab-btn-library" onclick="switchTab('library')"
+        class="flex-1 py-3 px-4 rounded-2xl font-display font-bold text-sm sm:text-base flex items-center justify-center gap-2 transition-all bg-gradient-to-r from-lotus-400 to-saffron-400 text-white shadow-md">
+        <span>🎶</span> Ragas & Songs Library
+      </button>
+      <button id="tab-btn-riyaz" onclick="switchTab('riyaz')"
+        class="flex-1 py-3 px-4 rounded-2xl font-display font-bold text-sm sm:text-base flex items-center justify-center gap-2 transition-all text-slate-600 hover:bg-lotus-50">
+        <span>🪴</span> Riyaz & Plant Streak Garden
+        <span id="nav-streak-pill" class="px-2 py-0.5 text-xs rounded-full bg-sage-100 text-sage-500 font-extrabold">0🔥</span>
+      </button>
+    </nav>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 1: RAGAS & SONGS LIBRARY                                          -->
+    <!-- ===================================================================== -->
+    <main id="view-library" class="space-y-6">
+
+      <!-- Add New Raga or Song Form -->
+      <section class="bg-white/90 backdrop-blur-md rounded-3xl shadow-sm border border-lotus-100 p-5 sm:p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-display text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-2">
+            <span class="w-8 h-8 rounded-xl bg-lotus-100 text-lotus-500 flex items-center justify-center text-base">➕</span>
+            Add a New Raaga or Classical Song
+          </h2>
+          <span class="text-xs font-semibold text-lotus-500 bg-lotus-50 px-3 py-1 rounded-full border border-lotus-100">
+            ✨ Auto-fetches Top 3 Videos, Recordings & Lyrics!
+          </span>
+        </div>
+
+        <form id="add-item-form" onsubmit="handleAddItem(event)" class="grid grid-cols-1 md:grid-cols-12 gap-4">
+          <!-- Type Selector -->
+          <div class="md:col-span-3">
+            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Category</label>
+            <div class="grid grid-cols-2 gap-2 bg-slate-100/80 p-1 rounded-2xl">
+              <button type="button" id="type-raaga-btn" onclick="selectEntryType('Raaga')"
+                class="py-2.5 px-3 rounded-xl text-sm font-bold transition bg-white text-lotus-500 shadow-sm">
+                🎼 Raaga
+              </button>
+              <button type="button" id="type-song-btn" onclick="selectEntryType('Song')"
+                class="py-2.5 px-3 rounded-xl text-sm font-bold transition text-slate-500 hover:text-slate-700">
+                🎤 Song
+              </button>
+            </div>
+            <input type="hidden" id="entry-type" value="Raaga" />
+          </div>
+
+          <!-- Title / Name -->
+          <div class="md:col-span-4">
+            <label for="entry-title" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+              <span id="title-label-text">Raaga Name</span> *
+            </label>
+            <input id="entry-title" type="text" required placeholder="e.g., Raag Yaman, Raag Bhairav..."
+              class="w-full px-4 py-2.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-lotus-400 text-sm font-medium bg-white" />
+          </div>
+
+          <!-- Status -->
+          <div class="md:col-span-2">
+            <label for="entry-status" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Progress</label>
+            <select id="entry-status"
+              class="w-full px-3.5 py-2.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-lotus-400 text-sm font-semibold bg-white text-slate-700">
+              <option value="Learning">🌱 Learning</option>
+              <option value="Mastered">⭐ Mastered</option>
+            </select>
+          </div>
+
+          <!-- Personal Notes -->
+          <div class="md:col-span-3">
+            <label for="entry-notes" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Guru / Practice Notes</label>
+            <input id="entry-notes" type="text" placeholder="e.g., Teental, evening raga..."
+              class="w-full px-4 py-2.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-lotus-400 text-sm bg-white" />
+          </div>
+
+          <!-- Submit Button -->
+          <div class="md:col-span-12 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
+            <p id="form-helper-hint" class="text-xs text-slate-500">
+              💡 Adding a <strong>Raaga</strong> fetches Top 3 YouTube tutorials, MP3/MP4 recording links, plus Aroha, Avaroha & Pakad notes!
+            </p>
+            <button type="submit" id="add-submit-btn"
+              class="px-6 py-3 rounded-2xl font-display font-bold text-sm text-white bg-gradient-to-r from-lotus-500 to-saffron-400 hover:opacity-95 shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 shrink-0">
+              <span>✨ Add & Find Learning Resources</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Filter & Search Bar -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="setLibraryFilter('ALL')" id="filter-ALL"
+            class="px-4 py-2 rounded-2xl text-xs font-bold bg-slate-800 text-white shadow-sm transition">
+            All (<span id="count-all">0</span>)
+          </button>
+          <button onclick="setLibraryFilter('Raaga')" id="filter-Raaga"
+            class="px-4 py-2 rounded-2xl text-xs font-bold bg-white text-slate-600 hover:bg-lotus-50 border border-lotus-100 transition">
+            🎼 Raagas (<span id="count-raagas">0</span>)
+          </button>
+          <button onclick="setLibraryFilter('Song')" id="filter-Song"
+            class="px-4 py-2 rounded-2xl text-xs font-bold bg-white text-slate-600 hover:bg-saffron-50 border border-saffron-100 transition">
+            🎤 Songs (<span id="count-songs">0</span>)
+          </button>
+        </div>
+        <div class="relative sm:w-64">
+          <input id="library-search" type="text" oninput="renderLibrary()" placeholder="Search raaga or song..."
+            class="w-full pl-9 pr-4 py-2 rounded-2xl bg-white border border-lotus-100 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-lotus-300" />
+          <span class="absolute left-3 top-2 text-slate-400 text-sm">🔍</span>
+        </div>
+      </div>
+
+      <!-- Library Cards Container -->
+      <div id="library-list" class="space-y-5"></div>
+    </main>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 2: RIYAZ PRACTICE & CUTE PLANT STREAK GARDEN                      -->
+    <!-- ===================================================================== -->
+    <main id="view-riyaz" class="hidden space-y-6">
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Left Column: Cute Growing Plant Streak Garden & Streak Guards -->
+        <section class="lg:col-span-6 bg-white/90 backdrop-blur-md rounded-3xl shadow-sm border border-sage-200 p-5 sm:p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="font-display text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-2">
+                <span>🪴</span> Your Musical Riyaz Plant
+              </h2>
+              <span id="plant-stage-badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-sage-100 text-sage-500 border border-sage-200">
+                Stage 1: Little Sprout
+              </span>
+            </div>
+
+            <!-- Interactive Cute Plant SVG Canvas -->
+            <div class="relative rounded-3xl bg-gradient-to-b from-sky-50 via-lotus-50/40 to-sage-50 border border-sage-100 p-4 flex flex-col items-center justify-center overflow-hidden my-3">
+              <!-- Floating Musical Notes -->
+              <div id="plant-notes-overlay" class="w-full flex justify-around text-lg pointer-events-none select-none mb-1">
+                <span class="animate-float-note text-lotus-400" style="animation-delay: 0s;">♪</span>
+                <span class="animate-float-note text-saffron-400" style="animation-delay: 0.9s;">♫</span>
+                <span class="animate-float-note text-sage-500" style="animation-delay: 1.7s;">♩</span>
+                <span class="animate-float-note text-amber-500" style="animation-delay: 2.3s;">♬</span>
+              </div>
+
+              <!-- Dynamic SVG Plant Graphic -->
+              <div id="cute-plant-container" class="w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
+                <!-- Rendered via JS based on current streak stage -->
+              </div>
+
+              <!-- Streak Counter Pill inside Garden -->
+              <div class="mt-1 flex items-center gap-3 bg-white/90 backdrop-blur-sm px-5 py-2 rounded-full shadow-sm border border-sage-200">
+                <span class="text-xl">🔥</span>
+                <div>
+                  <span id="garden-streak-count" class="font-display text-2xl font-extrabold text-slate-800">0</span>
+                  <span class="text-xs font-bold text-slate-500 uppercase ml-1">Day Streak</span>
+                </div>
+                <span class="text-slate-300">|</span>
+                <div class="text-xs font-semibold text-sage-500">
+                  Best: <strong id="garden-best-streak">0</strong>d
+                </div>
+              </div>
+            </div>
+
+            <!-- Plant Growth Progress Bar to Next Stage -->
+            <div class="bg-sage-50/70 rounded-2xl p-3.5 border border-sage-100 mb-4">
+              <div class="flex justify-between text-xs font-bold text-slate-600 mb-1.5">
+                <span id="next-stage-label">Next Growth: Baby Leaves (2 Days)</span>
+                <span id="next-stage-pct">0%</span>
+              </div>
+              <div class="w-full h-2.5 bg-white rounded-full overflow-hidden border border-sage-200">
+                <div id="plant-progress-bar" class="h-full bg-gradient-to-r from-sage-400 to-emerald-500 rounded-full transition-all duration-500" style="width: 10%"></div>
+              </div>
+              <p id="plant-encouragement" class="text-xs text-slate-500 mt-2 font-medium">
+                🌱 Practice today to water your sprout and help it grow!
+              </p>
+            </div>
+          </div>
+
+          <!-- 2 Cute Streak Guards Per Week Box -->
+          <div class="bg-gradient-to-r from-lotus-50 via-amber-50/60 to-sky-50 rounded-2xl p-4 border border-lotus-200/80">
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <div>
+                <h3 class="font-display text-sm font-extrabold text-slate-800 flex items-center gap-1.5">
+                  <span>☂️</span> Weekly Cute Streak Guards
+                </h3>
+                <p class="text-xs text-slate-600 mt-0.5">
+                  Busy with exams, travel, or feeling unwell? Use 1 of your <strong>2 weekly guards</strong> so your plant stays safe!
+                </p>
+              </div>
+              <span id="guards-left-badge" class="px-2.5 py-1 rounded-xl bg-white text-lotus-500 text-xs font-extrabold border border-lotus-200 shrink-0">
+                2 / 2 Left
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between gap-3 mt-3">
+              <!-- Visual Guard Icons -->
+              <div id="guard-icons-row" class="flex items-center gap-2"></div>
+
+              <button id="use-guard-btn" onclick="activateStreakGuard()"
+                class="px-4 py-2 rounded-2xl text-xs font-extrabold text-white bg-gradient-to-r from-sky-400 to-lotus-400 hover:opacity-95 shadow-sm transition flex items-center gap-1.5">
+                <span>🛡️</span> Protect Today's Streak
+              </button>
+            </div>
+            <p id="guard-status-note" class="text-[11px] text-slate-500 mt-2">
+              Refreshes automatically every Monday!
+            </p>
+          </div>
+        </section>
+
+        <!-- Right Column: Riyaz Logger, Live Tanpura Drone & Timer -->
+        <section class="lg:col-span-6 space-y-6">
+
+          <!-- Live Riyaz Timer & Tanpura Shruti Drone -->
+          <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-sm border border-saffron-200 p-5 sm:p-6">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="font-display text-lg font-bold text-slate-800 flex items-center gap-2">
+                <span>🪕</span> Live Riyaz Timer & Tanpura Drone
+              </h2>
+              <span class="text-xs font-bold text-saffron-500 bg-saffron-50 px-2.5 py-1 rounded-full">Sa - Pa - Sa</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center bg-gradient-to-br from-saffron-50/70 to-amber-50/60 p-4 rounded-2xl border border-saffron-100">
+              <!-- Timer Display -->
+              <div class="text-center sm:text-left">
+                <div class="text-xs font-bold text-slate-500 uppercase tracking-wider">Session Timer</div>
+                <div id="riyaz-timer-display" class="font-display text-3xl sm:text-4xl font-extrabold text-slate-800 my-1 tabular-nums">
+                  00:00
+                </div>
+                <div class="flex items-center justify-center sm:justify-start gap-2 mt-2">
+                  <button id="timer-start-btn" onclick="toggleRiyazTimer()"
+                    class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-saffron-500 text-white hover:bg-saffron-400 transition shadow-sm">
+                    ▶ Start Timer
+                  </button>
+                  <button onclick="useTimerMinutes()"
+                    class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 border border-saffron-200 hover:bg-saffron-50 transition">
+                    ↓ Use Mins
+                  </button>
+                  <button onclick="resetRiyazTimer()"
+                    class="p-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-600 transition" title="Reset Timer">
+                    ↺
+                  </button>
+                </div>
+              </div>
+
+              <!-- Built-in Web Audio Tanpura Drone -->
+              <div class="bg-white/90 p-3.5 rounded-2xl border border-saffron-100">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-extrabold text-slate-700">🎵 Tanpura Shruti</span>
+                  <select id="tanpura-pitch" onchange="updateTanpuraPitch()"
+                    class="text-xs font-bold bg-saffron-50 text-saffron-500 px-2 py-1 rounded-lg border border-saffron-200 focus:outline-none">
+                    <option value="130.81">C (Safed 1)</option>
+                    <option value="138.59" selected>C# (Kali 1)</option>
+                    <option value="146.83">D (Safed 2)</option>
+                    <option value="155.56">D# (Kali 2)</option>
+                    <option value="164.81">E (Safed 3)</option>
+                    <option value="174.61">F (Safed 4)</option>
+                    <option value="196.00">G (Safed 5)</option>
+                    <option value="220.00">A (Safed 6)</option>
+                  </select>
+                </div>
+                <button id="tanpura-toggle-btn" onclick="toggleTanpura()"
+                  class="w-full py-2.5 px-3 rounded-xl text-xs font-extrabold bg-gradient-to-r from-amber-500 to-saffron-500 text-white shadow-sm hover:opacity-95 transition flex items-center justify-center gap-2">
+                  <span>🔊</span> <span id="tanpura-btn-text">Play Tanpura Drone</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Log Practice Form -->
+          <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-sm border border-lotus-100 p-5 sm:p-6">
+            <h2 class="font-display text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+              <span>💧</span> Log Today's Riyaz & Water Plant
+            </h2>
+
+            <form onsubmit="handleLogPractice(event)" class="space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="practice-date" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Practice Date</label>
+                  <input id="practice-date" type="date" required
+                    class="w-full px-4 py-2.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sage-400 text-sm font-semibold text-slate-700" />
+                </div>
+                <div>
+                  <label for="practice-minutes" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Duration (Minutes)</label>
+                  <input id="practice-minutes" type="number" min="1" max="600" value="30" required
+                    class="w-full px-4 py-2.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sage-400 text-sm font-bold text-slate-800" />
+                </div>
+              </div>
+
+              <!-- Quick Duration Chips -->
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-xs font-semibold text-slate-400">Quick select:</span>
+                <button type="button" onclick="setPracticeMinutes(15)" class="px-3 py-1 rounded-xl text-xs font-bold bg-sage-50 text-sage-500 hover:bg-sage-100 border border-sage-200 transition">15 mins</button>
+                <button type="button" onclick="setPracticeMinutes(30)" class="px-3 py-1 rounded-xl text-xs font-bold bg-sage-50 text-sage-500 hover:bg-sage-100 border border-sage-200 transition">30 mins</button>
+                <button type="button" onclick="setPracticeMinutes(45)" class="px-3 py-1 rounded-xl text-xs font-bold bg-sage-50 text-sage-500 hover:bg-sage-100 border border-sage-200 transition">45 mins</button>
+                <button type="button" onclick="setPracticeMinutes(60)" class="px-3 py-1 rounded-xl text-xs font-bold bg-sage-50 text-sage-500 hover:bg-sage-100 border border-sage-200 transition">60 mins</button>
+              </div>
+
+              <div>
+                <label for="practice-focus" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">What did you practice?</label>
+                <input id="practice-focus" type="text" placeholder="e.g., Alankars, Raag Yaman Bandish, Taans..."
+                  class="w-full px-4 py-2.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sage-400 text-sm" />
+              </div>
+
+              <button type="submit"
+                class="w-full py-3.5 px-6 rounded-2xl font-display font-extrabold text-sm sm:text-base text-white bg-gradient-to-r from-sage-500 to-emerald-500 hover:opacity-95 shadow-md hover:shadow-lg transition flex items-center justify-center gap-2">
+                <span>🌱 Save Riyaz & Grow My Plant!</span>
+              </button>
+            </form>
+          </div>
+        </section>
+      </div>
+
+      <!-- Practice History & Total Riyaz Stats -->
+      <section class="bg-white/90 backdrop-blur-md rounded-3xl shadow-sm border border-lotus-100 p-5 sm:p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <h3 class="font-display text-lg font-bold text-slate-800 flex items-center gap-2">
+            <span>📅</span> Riyaz Practice Journal
+          </h3>
+          <div class="flex items-center gap-3 text-xs font-bold">
+            <span class="px-3 py-1.5 rounded-xl bg-sage-50 text-sage-500 border border-sage-200">
+              Total Time: <span id="total-riyaz-mins">0</span> mins
+            </span>
+            <span class="px-3 py-1.5 rounded-xl bg-lotus-50 text-lotus-500 border border-lotus-200">
+              Sessions: <span id="total-riyaz-sessions">0</span>
+            </span>
+          </div>
+        </div>
+        <div id="practice-history-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- JAVASCRIPT APPLICATION LOGIC                                          -->
+  <!-- ===================================================================== -->
+  <script>
+    // -------------------------------------------------------------------------
+    // 1. STATE & CONSTANTS
+    // -------------------------------------------------------------------------
+    const STORAGE_KEY = 'shifa_raga_riyaz_studio_v1';
+    const apiKey = ""; // Canvas runtime provides API key automatically when empty
+
+    let appState = {
+      studioName: "Shifa's Raga & Riyaz Studio",
+      soundEnabled: true,
+      items: [],
+      practiceLogs: [], // { id, date: 'YYYY-MM-DD', minutes: number, focus: string, isGuard?: boolean }
+      streak: 0,
+      bestStreak: 0,
+      lastActiveDate: null, // 'YYYY-MM-DD'
+      guardWeekKey: null,   // 'YYYY-Www'
+      guardsUsedThisWeek: 0
+    };
+
+    let currentTab = 'library';
+    let currentFilter = 'ALL';
+
+    // Helper: Get local YYYY-MM-DD string reliably
+    function getLocalDateStr(dateObj = new Date()) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    // Helper: Get Monday-based ISO Week key (e.g., "2026-W47") so guards reset weekly
+    function getWeekKey(dateObj = new Date()) {
+      const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
+      const dayNum = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+      return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+    }
+
+    // Helper: Difference in calendar days between two 'YYYY-MM-DD' strings
+    function diffDays(dateStrA, dateStrB) {
+      if (!dateStrA || !dateStrB) return 999;
+      const [y1, m1, d1] = dateStrA.split('-').map(Number);
+      const [y2, m2, d2] = dateStrB.split('-').map(Number);
+      const t1 = Date.UTC(y1, m1 - 1, d1);
+      const t2 = Date.UTC(y2, m2 - 1, d2);
+      return Math.round((t2 - t1) / 86400000);
+    }
+
+    // Starter Pre-Populated Examples so she can immediately explore!
+    const STARTER_ITEMS = [
+      {
+        id: 'starter-yaman',
+        type: 'Raaga',
+        title: 'Raag Yaman',
+        status: 'Mastered',
+        notes: 'Evening Raaga (1st Prahar of night), Kalyan Thaat, Teevra Ma.',
+        loading: false,
+        ragaGrammar: {
+          thaat: 'Kalyan Thaat',
+          time: 'Evening (6 PM – 9 PM)',
+          vadiSamvadi: 'Vadi: Ga | Samvadi: Ni',
+          aroha: 'Ṇ R G M# P D N Ṡ',
+          avaroha: 'Ṡ N D P M# G R S',
+          pakad: 'Ṇ R G R, S, P R G R, Ṇ R S'
+        },
+        youtubeVideos: [
+          {
+            title: 'Raag Yaman Complete Vocal Lesson for Beginners (Alankar & Bandish)',
+            channel: 'Anuja Kamat / Classical Vocal Academy',
+            reason: 'Clear step-by-step Swar Vistar, Aroha-Avaroha, and slow Pakad demonstration for young learners.',
+            searchQuery: 'Raag Yaman vocal lesson for beginners aroha avaroha bandish'
+          },
+          {
+            title: 'Eri Aali Piya Bin - Famous Chhota Khayal in Raag Yaman (Teental)',
+            channel: 'Pt. Jasraj / Kaushiki Chakraborty',
+            reason: 'Iconic traditional Bandish in Raag Yaman with expressive taans and clear pronunciation.',
+            searchQuery: 'Eri Aali Piya Bin Raag Yaman classical vocal'
+          },
+          {
+            title: 'Raag Yaman Riyaz with Tanpura & Tabla (16 Beat Teental)',
+            channel: 'Riyaz Studio India',
+            reason: 'Great accompaniment track for practicing Sargam Geet and Lakshangeet in Raag Yaman.',
+            searchQuery: 'Raag Yaman bandish teental tutorial notation'
+          }
+        ],
+        recordings: [
+          {
+            label: 'Listen / Search MP3 Reference: Raag Yaman Alaap & Bandish',
+            url: 'https://www.youtube.com/results?search_query=Raag+Yaman+vocal+bandish+audio+mp3',
+            format: 'MP3 / Audio'
+          },
+          {
+            label: 'Watch / Search MP4 Video: Raag Yaman Live Concert Recital',
+            url: 'https://www.youtube.com/results?search_query=Raag+Yaman+classical+vocal+full+performance',
+            format: 'MP4 / Video'
+          }
+        ],
+        customLinks: [],
+        lyrics: null
+      },
+      {
+        id: 'starter-bhajan',
+        type: 'Song',
+        title: 'Payoji Maine Ram Ratan Dhan Payo',
+        status: 'Learning',
+        notes: 'Meera Bai Bhajan, often sung in Raag Yaman / Mishr Khamaj.',
+        loading: false,
+        ragaGrammar: null,
+        youtubeVideos: [
+          {
+            title: 'Payoji Maine Ram Ratan Dhan Payo - Classical Vocal Tutorial with Harmonium',
+            channel: 'Sur Sangam / Classical Music Lessons',
+            reason: 'Breaks down every line with notation and harmonium notes so you can sing in tune.',
+            searchQuery: 'Payoji Maine Ram Ratan Dhan Payo harmonium vocal tutorial'
+          },
+          {
+            title: 'Payoji Maine Ram Ratan Dhan Payo - Lata Mangeshkar / Pt. D.V. Paluskar',
+            channel: 'Saregama Classical',
+            reason: 'Soulful, crystal-clear rendition ideal for learning classical bhav and phrasing.',
+            searchQuery: 'Payoji Maine Ram Ratan Dhan Payo classical rendition'
+          },
+          {
+            title: 'Payoji Maine Ram Ratan Dhan Payo - Karaoke / Tanpura Practice Track',
+            channel: 'Indian Classical Karaoke',
+            reason: 'Sing along with tabla and tanpura once you memorize the stanzas.',
+            searchQuery: 'Payoji Maine Ram Ratan Dhan Payo karaoke track'
+          }
+        ],
+        recordings: [
+          {
+            label: 'MP3 Audio Reference: Payoji Maine Classical Vocal Track',
+            url: 'https://www.youtube.com/results?search_query=Payoji+Maine+Ram+Ratan+Dhan+Payo+mp3+classical',
+            format: 'MP3 / Audio'
+          },
+          {
+            label: 'MP4 Video Reference: Live Classical Bhajan Rendition',
+            url: 'https://www.youtube.com/results?search_query=Payoji+Maine+Ram+Ratan+Dhan+Payo+live+classical',
+            format: 'MP4 / Video'
+          }
+        ],
+        customLinks: [],
+        lyrics: {
+          englishLyrics:
+            "Payoji maine Ram ratan dhan payo,\n" +
+            "Vastu amolik di mere satguru,\n" +
+            "Kirpa kari apnayo.\n\n" +
+            "Janam janam ki poonji payi,\n" +
+            "Jag mein sabhi khovayo.\n\n" +
+            "Kharchai na khoote chor na loote,\n" +
+            "Din din badhat savayo.\n\n" +
+            "Sat ki naav khevatiya satguru,\n" +
+            "Bhavsagar tar aayo.\n" +
+            "Meera ke prabhu Giridhar Nagar,\n" +
+            "Harakh harakh jas gayo.",
+          meaningSummary:
+            "Composed by Saint Meera Bai: 'I have found the priceless jewel of divine devotion gifted by my true Guru. Unlike worldly wealth, this treasure can never be stolen or spent—it grows richer every single day!'"
+        }
+      }
+    ];
+
+    // -------------------------------------------------------------------------
+    // 2. INITIALIZATION & STREAK INTEGRITY CHECK
+    // -------------------------------------------------------------------------
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appState = { ...appState, ...parsed };
+        } else {
+          appState.items = STARTER_ITEMS;
+          saveState();
+        }
+      } catch (e) {
+        appState.items = STARTER_ITEMS;
+      }
+
+      // Check weekly reset for the 2 cute streak guards
+      const currentWeek = getWeekKey(new Date());
+      if (appState.guardWeekKey !== currentWeek) {
+        appState.guardWeekKey = currentWeek;
+        appState.guardsUsedThisWeek = 0;
+      }
+
+      // Evaluate if streak broke because a day was missed without a guard
+      validateStreakContinuity();
+      saveState();
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        showToast('Could not save locally (storage full).', 'error');
+      }
+    }
+
+    function validateStreakContinuity() {
+      if (!appState.lastActiveDate || appState.streak === 0) return;
+      const today = getLocalDateStr(new Date());
+      const gap = diffDays(appState.lastActiveDate, today);
+
+      // gap === 0 (practiced/guarded today) or gap === 1 (practiced/guarded yesterday) -> Streak intact!
+      if (gap > 1) {
+        // Missed at least 1 full day without practicing or activating a streak guard
+        const oldStreak = appState.streak;
+        appState.streak = 0;
+        if (oldStreak > 0) {
+          setTimeout(() => {
+            showToast(`Oh no! A practice day was missed, so your ${oldStreak}-day plant returned to a cute sprout 🌱. Start fresh today!`, 'info');
+          }, 600);
+        }
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 3. WEB AUDIO API: SOFT CHIMES & LIVE TANPURA DRONE SYNTH
+    // -------------------------------------------------------------------------
+    let audioCtx = null;
+    let tanpuraPlaying = false;
+    let tanpuraNodes = [];
+    let tanpuraInterval = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    // Play pleasant classical Sitar/Bell chime (Sa - Ga - Pa - Sa)
+    function playChime(type = 'success') {
+      if (!appState.soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        // C# Major / Raag Bilawal Sa-Ga-Pa-Sa frequencies
+        const freqs = type === 'grow'
+          ? [277.18, 349.23, 415.30, 554.37]
+          : [277.18, 415.30];
+
+        freqs.forEach((f, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(f, now + idx * 0.11);
+
+          gain.gain.setValueAtTime(0.001, now + idx * 0.11);
+          gain.gain.exponentialRampToValueAtTime(0.12, now + idx * 0.11 + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.11 + 0.65);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.11);
+          osc.stop(now + idx * 0.11 + 0.7);
+        });
+      } catch (e) {
+        // Ignore audio autoplay blocks gracefully
+      }
+    }
+
+    function toggleSoundEffects() {
+      appState.soundEnabled = !appState.soundEnabled;
+      saveState();
+      updateSoundToggleUI();
+      if (appState.soundEnabled) playChime('success');
+    }
+
+    function updateSoundToggleUI() {
+      document.getElementById('sound-icon').textContent = appState.soundEnabled ? '🔔' : '🔕';
+      document.getElementById('sound-label').textContent = appState.soundEnabled ? 'Chimes On' : 'Muted';
+    }
+
+    // Tanpura Pluck Simulation (Pa - Sa' - Sa' - Sa)
+    function pluckTanpuraString(freq, delayOffset) {
+      if (!tanpuraPlaying) return;
+      const ctx = getAudioContext();
+      const now = ctx.currentTime + delayOffset;
+
+      // Fundamental + warm harmonic overtones ("Jivari" buzz effect)
+      const harmonics = [1, 2, 3, 4];
+      const weights = [0.14, 0.07, 0.04, 0.02];
+
+      harmonics.forEach((mult, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = i === 0 ? 'triangle' : 'sine';
+        osc.frequency.setValueAtTime(freq * mult, now);
+
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(weights[i], now + 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.4);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 3.5);
+        tanpuraNodes.push(osc);
+      });
+    }
+
+    function startTanpuraLoop() {
+      const baseSa = parseFloat(document.getElementById('tanpura-pitch').value) || 138.59;
+      const pa = baseSa * 1.5;        // Pancham (Pa)
+      const highSa = baseSa * 2.0;    // Tara Shadaj (Sa')
+
+      const cycle = () => {
+        if (!tanpuraPlaying) return;
+        pluckTanpuraString(pa, 0.0);
+        pluckTanpuraString(highSa, 0.75);
+        pluckTanpuraString(highSa, 1.5);
+        pluckTanpuraString(baseSa, 2.25);
+      };
+
+      cycle();
+      tanpuraInterval = setInterval(cycle, 3200);
+    }
+
+    function stopTanpuraLoop() {
+      if (tanpuraInterval) {
+        clearInterval(tanpuraInterval);
+        tanpuraInterval = null;
+      }
+      tanpuraNodes.forEach(osc => {
+        try { osc.stop(); } catch (e) {}
+      });
+      tanpuraNodes = [];
+    }
+
+    function toggleTanpura() {
+      tanpuraPlaying = !tanpuraPlaying;
+      const btn = document.getElementById('tanpura-toggle-btn');
+      const txt = document.getElementById('tanpura-btn-text');
+
+      if (tanpuraPlaying) {
+        getAudioContext();
+        startTanpuraLoop();
+        txt.textContent = 'Stop Tanpura Drone';
+        btn.classList.remove('from-amber-500', 'to-saffron-500');
+        btn.classList.add('from-rose-500', 'to-pink-600');
+        showToast('🪕 Tanpura drone started! Happy Riyaz!', 'success');
+      } else {
+        stopTanpuraLoop();
+        txt.textContent = 'Play Tanpura Drone';
+        btn.classList.add('from-amber-500', 'to-saffron-500');
+        btn.classList.remove('from-rose-500', 'to-pink-600');
+      }
+    }
+
+    function updateTanpuraPitch() {
+      if (tanpuraPlaying) {
+        stopTanpuraLoop();
+        startTanpuraLoop();
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. RIYAZ STOPWATCH TIMER
+    // -------------------------------------------------------------------------
+    let timerSeconds = 0;
+    let timerRunning = false;
+    let timerInterval = null;
+
+    function toggleRiyazTimer() {
+      timerRunning = !timerRunning;
+      const btn = document.getElementById('timer-start-btn');
+      if (timerRunning) {
+        btn.textContent = '⏸ Pause';
+        btn.classList.replace('bg-saffron-500', 'bg-amber-600');
+        timerInterval = setInterval(() => {
+          timerSeconds++;
+          updateTimerDisplay();
+        }, 1000);
+      } else {
+        btn.textContent = '▶ Resume';
+        btn.classList.replace('bg-amber-600', 'bg-saffron-500');
+        clearInterval(timerInterval);
+      }
+    }
+
+    function resetRiyazTimer() {
+      timerRunning = false;
+      clearInterval(timerInterval);
+      timerSeconds = 0;
+      updateTimerDisplay();
+      const btn = document.getElementById('timer-start-btn');
+      btn.textContent = '▶ Start Timer';
+      btn.classList.remove('bg-amber-600');
+      btn.classList.add('bg-saffron-500');
+    }
+
+    function updateTimerDisplay() {
+      const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+      const secs = String(timerSeconds % 60).padStart(2, '0');
+      document.getElementById('riyaz-timer-display').textContent = `${mins}:${secs}`;
+    }
+
+    function useTimerMinutes() {
+      const mins = Math.max(1, Math.round(timerSeconds / 60));
+      document.getElementById('practice-minutes').value = mins;
+      showToast(`Filled ${mins} minute(s) from your Riyaz timer!`, 'info');
+    }
+
+    function setPracticeMinutes(m) {
+      document.getElementById('practice-minutes').value = m;
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. GEMINI API INTEGRATION (TOP 3 YOUTUBE VIDEOS, RECORDINGS, LYRICS/NOTES)
+    // -------------------------------------------------------------------------
+    async function fetchGeminiResources(item) {
+      const isSong = item.type === 'Song';
+      const prompt = isSong
+        ? `You are a warm, expert Indian Classical Music Guru helping a young student learn the classical song/bandish/bhajan "${item.title}" (Notes: "${item.notes || 'None'}").
+           Provide:
+           1. Top 3 best relevant YouTube video recommendations for learning or listening to "${item.title}" (real famous teachers, classical vocalists, or tutorial channels, with an accurate YouTube searchQuery so clicking opens the exact video/tutorial).
+           2. 2 helpful MP3/MP4 recording reference links (using YouTube search URLs like https://www.youtube.com/results?search_query=... for audio/video reference tracks).
+           3. Full, clean English transliteration lyrics of "${item.title}" and a brief 2-sentence English meaning summary.`
+        : `You are a warm, expert Indian Classical Music Guru helping a young student learn "${item.title}" (Notes: "${item.notes || 'None'}").
+           Provide:
+           1. Top 3 best relevant YouTube video recommendations for learning "${item.title}" (Aroha/Avaroha, Pakad, Bandish tutorials, or iconic classical performances, with an accurate YouTube searchQuery).
+           2. 2 helpful MP3/MP4 recording reference links (using YouTube search URLs like https://www.youtube.com/results?search_query=... for audio/video reference tracks).
+           3. Musical grammar of "${item.title}": Thaat, Time of day, Vadi & Samvadi, Aroha, Avaroha, and Pakad (using clean Indian Sargam notation like S R G M P D N S'). Do NOT include song lyrics.`;
+
+      const responseSchema = {
+        type: "OBJECT",
+        properties: {
+          youtubeVideos: {
+            type: "ARRAY",
+            items: {
+              type: "OBJECT",
+              properties: {
+                title: { type: "STRING" },
+                channel: { type: "STRING" },
+                reason: { type: "STRING" },
+                searchQuery: { type: "STRING" }
+              },
+              required: ["title", "channel", "reason", "searchQuery"]
+            }
+          },
+          recordings: {
+            type: "ARRAY",
+            items: {
+              type: "OBJECT",
+              properties: {
+                label: { type: "STRING" },
+                url: { type: "STRING" },
+                format: { type: "STRING" }
+              },
+              required: ["label", "url", "format"]
+            }
+          },
+          lyrics: {
+            type: "OBJECT",
+            nullable: true,
+            properties: {
+              englishLyrics: { type: "STRING" },
+              meaningSummary: { type: "STRING" }
+            }
+          },
+          ragaGrammar: {
+            type: "OBJECT",
+            nullable: true,
+            properties: {
+              thaat: { type: "STRING" },
+              time: { type: "STRING" },
+              vadiSamvadi: { type: "STRING" },
+              aroha: { type: "STRING" },
+              avaroha: { type: "STRING" },
+              pakad: { type: "STRING" }
+            }
+          }
+        },
+        required: ["youtubeVideos", "recordings"]
+      };
+
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: responseSchema
+        }
+      };
+
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+      // Exponential backoff retry wrapper (1s, 2s, 4s)
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const data = await response.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (!text) throw new Error('Empty response');
+          return JSON.parse(text);
+        } catch (err) {
+          if (attempt < 2) {
+            await new Promise(res => setTimeout(res, Math.pow(2, attempt) * 1000));
+          } else {
+            // Graceful fallback structured data if offline or API unavailable
+            return buildFallbackResources(item);
+          }
+        }
+      }
+    }
+
+    function buildFallbackResources(item) {
+      const q = encodeURIComponent(item.title);
+      if (item.type === 'Song') {
+        return {
+          youtubeVideos: [
+            {
+              title: `${item.title} - Classical Vocal & Harmonium Tutorial`,
+              channel: 'Classical Vocal Lessons',
+              reason: 'Step-by-step swar & lyrics breakdown for young singers.',
+              searchQuery: `${item.title} classical vocal tutorial`
+            },
+            {
+              title: `${item.title} - Traditional Classical Rendition`,
+              channel: 'Indian Classical Masters',
+              reason: 'Listen to authentic pronunciation, murki, and emotional expression.',
+              searchQuery: `${item.title} classical song`
+            },
+            {
+              title: `${item.title} - Tanpura & Tabla Practice Track`,
+              channel: 'Riyaz Accompaniment',
+              reason: 'Ideal backing track to practice singing in rhythm.',
+              searchQuery: `${item.title} karaoke tanpura`
+            }
+          ],
+          recordings: [
+            { label: `MP3 Audio Search: ${item.title}`, url: `https://www.youtube.com/results?search_query=${q}+audio+mp3`, format: 'MP3 / Audio' },
+            { label: `MP4 Video Search: ${item.title}`, url: `https://www.youtube.com/results?search_query=${q}+video+performance`, format: 'MP4 / Video' }
+          ],
+          lyrics: {
+            englishLyrics: `Lyrics for "${item.title}" can be refreshed anytime by clicking "Refresh AI Resources", or paste your own custom lyrics notes below!`,
+            meaningSummary: `A cherished composition in your repertoire. Practice slowly with Tanpura first.`
+          },
+          ragaGrammar: null
+        };
+      } else {
+        return {
+          youtubeVideos: [
+            {
+              title: `${item.title} - Complete Beginner Guide (Aroha, Avaroha & Pakad)`,
+              channel: 'Indian Classical Vocal Academy',
+              reason: 'Teaches the foundational scale, chalan, and mood of this raaga.',
+              searchQuery: `${item.title} aroha avaroha pakad tutorial`
+            },
+            {
+              title: `${item.title} - Popular Chhota Khayal Bandish in Teental`,
+              channel: 'Sangeet Pravah',
+              reason: 'Learn a melodic composition set in 16-beat Teental.',
+              searchQuery: `${item.title} bandish teental`
+            },
+            {
+              title: `${item.title} - Alankars & Swar Vistar Riyaz`,
+              channel: 'Riyaz Studio',
+              reason: 'Great daily vocal warm-up patterns for this raaga.',
+              searchQuery: `${item.title} alankar riyaz`
+            }
+          ],
+          recordings: [
+            { label: `MP3 Audio Search: ${item.title} Alaap & Bandish`, url: `https://www.youtube.com/results?search_query=${q}+alaap+bandish+mp3`, format: 'MP3 / Audio' },
+            { label: `MP4 Video Search: ${item.title} Concert Recital`, url: `https://www.youtube.com/results?search_query=${q}+classical+vocal+concert`, format: 'MP4 / Video' }
+          ],
+          lyrics: null,
+          ragaGrammar: {
+            thaat: 'Traditional Hindustani Thaat',
+            time: 'Check with Guru / Refresh AI',
+            vadiSamvadi: 'Click Refresh Resources for exact swaras',
+            aroha: 'S R G M P D N Ṡ',
+            avaroha: 'Ṡ N D P M G R S',
+            pakad: 'Click "Refresh Resources" to load exact Pakad'
+          }
+        };
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 6. LIBRARY ACTIONS (ADD, REFRESH AI, ADD CUSTOM MP3/MP4, TOGGLE STATUS)
+    // -------------------------------------------------------------------------
+    function selectEntryType(type) {
+      document.getElementById('entry-type').value = type;
+      const raagaBtn = document.getElementById('type-raaga-btn');
+      const songBtn = document.getElementById('type-song-btn');
+      const labelText = document.getElementById('title-label-text');
+      const titleInput = document.getElementById('entry-title');
+      const hintText = document.getElementById('form-helper-hint');
+
+      if (type === 'Raaga') {
+        raagaBtn.className = 'py-2.5 px-3 rounded-xl text-sm font-bold transition bg-white text-lotus-500 shadow-sm';
+        songBtn.className = 'py-2.5 px-3 rounded-xl text-sm font-bold transition text-slate-500 hover:text-slate-700';
+        labelText.textContent = 'Raaga Name';
+        titleInput.placeholder = 'e.g., Raag Yaman, Raag Bhairav, Raag Bageshree...';
+        hintText.innerHTML = '💡 Adding a <strong>Raaga</strong> fetches Top 3 YouTube tutorials, MP3/MP4 recording links, plus Aroha, Avaroha & Pakad notes!';
+      } else {
+        songBtn.className = 'py-2.5 px-3 rounded-xl text-sm font-bold transition bg-white text-saffron-500 shadow-sm';
+        raagaBtn.className = 'py-2.5 px-3 rounded-xl text-sm font-bold transition text-slate-500 hover:text-slate-700';
+        labelText.textContent = 'Song / Bandish / Bhajan Name';
+        titleInput.placeholder = 'e.g., Vaishnav Jan To, Albela Sajan, Eri Aali Piya Bin...';
+        hintText.innerHTML = '💡 Adding a <strong>Song</strong> fetches Top 3 YouTube videos, MP3/MP4 recording links, AND full English lyrics!';
+      }
+    }
+
+    async function handleAddItem(event) {
+      event.preventDefault();
+      const type = document.getElementById('entry-type').value;
+      const title = document.getElementById('entry-title').value.trim();
+      const status = document.getElementById('entry-status').value;
+      const notes = document.getElementById('entry-notes').value.trim();
+
+      if (!title) return;
+
+      const newItem = {
+        id: 'item-' + Date.now(),
+        type,
+        title,
+        status,
+        notes,
+        loading: true,
+        youtubeVideos: [],
+        recordings: [],
+        customLinks: [],
+        lyrics: null,
+        ragaGrammar: null
+      };
+
+      appState.items.unshift(newItem);
+      saveState();
+      renderAll();
+
+      // Clear form
+      document.getElementById('entry-title').value = '';
+      document.getElementById('entry-notes').value = '';
+      playChime('success');
+      showToast(`✨ Added "${title}"! Finding Top 3 videos, recordings${type === 'Song' ? ' & English lyrics' : ' & swaras'}...`, 'info');
+
+      // Fetch Gemini resources
+      const aiResult = await fetchGeminiResources(newItem);
+      const target = appState.items.find(i => i.id === newItem.id);
+      if (target) {
+        target.loading = false;
+        target.youtubeVideos = (aiResult.youtubeVideos || []).slice(0, 3);
+        target.recordings = aiResult.recordings || [];
+        target.lyrics = target.type === 'Song' ? (aiResult.lyrics || null) : null;
+        target.ragaGrammar = target.type === 'Raaga' ? (aiResult.ragaGrammar || null) : null;
+        saveState();
+        renderAll();
+        showToast(`🎶 Resources ready for "${target.title}"!`, 'success');
+      }
+    }
+
+    async function refreshItemResources(id) {
+      const item = appState.items.find(i => i.id === id);
+      if (!item) return;
+      item.loading = true;
+      renderLibrary();
+      showToast(`🔍 Refreshing Top 3 YouTube videos & resources for "${item.title}"...`, 'info');
+
+      const aiResult = await fetchGeminiResources(item);
+      item.loading = false;
+      item.youtubeVideos = (aiResult.youtubeVideos || []).slice(0, 3);
+      item.recordings = aiResult.recordings || [];
+      item.lyrics = item.type === 'Song' ? (aiResult.lyrics || null) : null;
+      item.ragaGrammar = item.type === 'Raaga' ? (aiResult.ragaGrammar || null) : null;
+
+      saveState();
+      renderAll();
+      playChime('success');
+      showToast(`✨ Updated resources for "${item.title}"!`, 'success');
+    }
+
+    function toggleItemStatus(id) {
+      const item = appState.items.find(i => i.id === id);
+      if (!item) return;
+      item.status = item.status === 'Mastered' ? 'Learning' : 'Mastered';
+      saveState();
+      renderAll();
+      if (item.status === 'Mastered') {
+        playChime('grow');
+        triggerMiniConfetti();
+        showToast(`🌟 Woohoo! Marked "${item.title}" as Mastered!`, 'success');
+      }
+    }
+
+    function deleteItem(id) {
+      const idx = appState.items.findIndex(i => i.id === id);
+      if (idx === -1) return;
+      const removed = appState.items.splice(idx, 1)[0];
+      saveState();
+      renderAll();
+      showToast(`Removed "${removed.title}" from your library.`, 'info');
+    }
+
+    // Add Custom MP3/MP4 Link to an entry
+    function handleAddCustomRecording(event, itemId) {
+      event.preventDefault();
+      const labelInput = document.getElementById(`rec-label-${itemId}`);
+      const urlInput = document.getElementById(`rec-url-${itemId}`);
+      const label = labelInput.value.trim() || 'My Practice Recording (MP3/MP4)';
+      let url = urlInput.value.trim();
+
+      if (!url) return;
+      if (!/^https?:\/\//i.test(url)) {
+        url = 'https://' + url;
+      }
+
+      const item = appState.items.find(i => i.id === itemId);
+      if (!item) return;
+
+      if (!item.customLinks) item.customLinks = [];
+      item.customLinks.push({
+        id: 'link-' + Date.now(),
+        label,
+        url
+      });
+
+      labelInput.value = '';
+      urlInput.value = '';
+      saveState();
+      renderLibrary();
+      playChime('success');
+      showToast('🎧 Saved your custom recording link!', 'success');
+    }
+
+    function removeCustomRecording(itemId, linkId) {
+      const item = appState.items.find(i => i.id === itemId);
+      if (!item || !item.customLinks) return;
+      item.customLinks = item.customLinks.filter(l => l.id !== linkId);
+      saveState();
+      renderLibrary();
+    }
+
+    function setLibraryFilter(filter) {
+      currentFilter = filter;
+      ['ALL', 'Raaga', 'Song'].forEach(f => {
+        const btn = document.getElementById(`filter-${f}`);
+        if (f === filter) {
+          btn.className = 'px-4 py-2 rounded-2xl text-xs font-bold bg-slate-800 text-white shadow-sm transition';
+        } else {
+          btn.className = 'px-4 py-2 rounded-2xl text-xs font-bold bg-white text-slate-600 hover:bg-lotus-50 border border-lotus-100 transition';
+        }
+      });
+      renderLibrary();
+    }
+
+    // -------------------------------------------------------------------------
+    // 7. RIYAZ PRACTICE LOGGING, PLANT GROWTH & 2 WEEKLY STREAK GUARDS
+    // -------------------------------------------------------------------------
+    function handleLogPractice(event) {
+      event.preventDefault();
+      const dateStr = document.getElementById('practice-date').value;
+      const minutes = parseInt(document.getElementById('practice-minutes').value, 10) || 15;
+      const focus = document.getElementById('practice-focus').value.trim() || 'Vocal Riyaz & Alankars';
+
+      if (!dateStr) return;
+
+      const today = getLocalDateStr(new Date());
+      const prevStage = getPlantStageInfo(appState.streak).stage;
+
+      // Record session in practice journal
+      appState.practiceLogs.unshift({
+        id: 'log-' + Date.now(),
+        date: dateStr,
+        minutes,
+        focus,
+        isGuard: false
+      });
+
+      // Update streak logic if logging for today or extending consecutive days
+      if (!appState.lastActiveDate) {
+        appState.streak = 1;
+        appState.lastActiveDate = dateStr;
+      } else {
+        const gap = diffDays(appState.lastActiveDate, dateStr);
+        if (gap === 0) {
+          // Already practiced/guarded on this date; ensure streak is at least 1
+          if (appState.streak === 0) appState.streak = 1;
+        } else if (gap === 1) {
+          appState.streak += 1;
+          appState.lastActiveDate = dateStr;
+        } else if (gap > 1) {
+          // Started a new streak after a gap
+          appState.streak = 1;
+          appState.lastActiveDate = dateStr;
+        }
+      }
+
+      if (appState.streak > appState.bestStreak) {
+        appState.bestStreak = appState.streak;
+      }
+
+      const newStage = getPlantStageInfo(appState.streak).stage;
+      document.getElementById('practice-focus').value = '';
+
+      saveState();
+      renderAll();
+      playChime('grow');
+
+      if (newStage > prevStage) {
+        triggerMiniConfetti();
+        showToast(`🌸 AMAZING! Your streak reached ${appState.streak} days and your plant evolved to Stage ${newStage}!`, 'success');
+      } else {
+        showToast(`💧 Logged ${minutes} mins of Riyaz! Your cute plant is happy (${appState.streak}-day streak)!`, 'success');
+      }
+    }
+
+    // Activate 1 of the 2 weekly cute streak guards
+    function activateStreakGuard() {
+      const currentWeek = getWeekKey(new Date());
+      if (appState.guardWeekKey !== currentWeek) {
+        appState.guardWeekKey = currentWeek;
+        appState.guardsUsedThisWeek = 0;
+      }
+
+      const guardsLeft = 2 - appState.guardsUsedThisWeek;
+      if (guardsLeft <= 0) {
+        showToast('☂️ You have already used both Streak Guards for this week! They refresh on Monday.', 'error');
+        return;
+      }
+
+      const today = getLocalDateStr(new Date());
+      if (appState.lastActiveDate === today) {
+        showToast('✨ Today is already protected or practiced! Your plant is safe.', 'info');
+        return;
+      }
+
+      // Use 1 guard
+      appState.guardsUsedThisWeek += 1;
+
+      if (!appState.lastActiveDate) {
+        appState.streak = 1;
+      } else {
+        const gap = diffDays(appState.lastActiveDate, today);
+        if (gap === 1) {
+          appState.streak += 1;
+        } else {
+          appState.streak = Math.max(1, appState.streak);
+        }
+      }
+      appState.lastActiveDate = today;
+      if (appState.streak > appState.bestStreak) {
+        appState.bestStreak = appState.streak;
+      }
+
+      appState.practiceLogs.unshift({
+        id: 'guard-' + Date.now(),
+        date: today,
+        minutes: 0,
+        focus: '☂️ Cute Streak Guard Activated (Rest Day Protected)',
+        isGuard: true
+      });
+
+      saveState();
+      renderAll();
+      playChime('success');
+      showToast(`☂️ Streak Guard activated! Your ${appState.streak}-day streak & plant are safe today! (${2 - appState.guardsUsedThisWeek} guard left this week)`, 'success');
+    }
+
+    // Determine Plant Stage based on streak count
+    function getPlantStageInfo(streak) {
+      if (streak <= 1) {
+        return {
+          stage: 1,
+          name: 'Stage 1: Cute Sprout',
+          nextLabel: 'Next Growth: Baby Leaves (2 Days)',
+          pct: streak === 1 ? 50 : 10,
+          message: streak === 1
+            ? '🌱 Your little sprout popped out! Practice tomorrow to grow baby leaves!'
+            : '🌱 Log your first Riyaz session today to wake up your cute sprout!'
+        };
+      } else if (streak <= 3) {
+        return {
+          stage: 2,
+          name: 'Stage 2: Baby Leaves',
+          nextLabel: 'Next Growth: Musical Buds (4 Days)',
+          pct: Math.round((streak / 4) * 100),
+          message: '🌿 Look at those fresh green leaves! Keep your streak going to form flower buds.'
+        };
+      } else if (streak <= 6) {
+        return {
+          stage: 3,
+          name: 'Stage 3: Musical Buds',
+          nextLabel: 'Next Growth: Blooming Rose-Lotus (7 Days)',
+          pct: Math.round((streak / 7) * 100),
+          message: '🌷 Sweet pink buds have appeared! Just a few more days to full bloom!'
+        };
+      } else if (streak <= 13) {
+        return {
+          stage: 4,
+          name: 'Stage 4: Blooming Flower',
+          nextLabel: 'Next Growth: Magical Lotus Tree (14 Days)',
+          pct: Math.round((streak / 14) * 100),
+          message: '🌺 Your plant is in gorgeous bloom! Reach 14 days for the Magical Lotus Tree!'
+        };
+      } else {
+        return {
+          stage: 5,
+          name: 'Stage 5: Magical Lotus Tree ✨',
+          nextLabel: 'Max Stage Reached! Keep Sparkling!',
+          pct: 100,
+          message: '🪷✨ Legendary Riyaz Master! Your Magical Lotus Tree glows with musical harmony!'
+        };
+      }
+    }
+
+    // Render Cute Kawaii Potted Plant SVG according to Stage 1..5
+    function renderPlantSVG(stage) {
+      const container = document.getElementById('cute-plant-container');
+
+      // Base Cute Terracotta Pot with Kawaii Happy Face
+      const potMarkup = `
+        <!-- Soft Ground Shadow -->
+        <ellipse cx="150" cy="268" rx="68" ry="12" fill="#d1fae5" />
+        <!-- Cute Pot Body -->
+        <path d="M102 205 H198 L186 260 C184 266 179 268 173 268 H127 C121 268 116 266 114 260 Z" fill="#fb923c" />
+        <!-- Pot Rim -->
+        <rect x="94" y="193" width="112" height="16" rx="8" fill="#fdba74" />
+        <!-- Soil Mound -->
+        <ellipse cx="150" cy="193" rx="44" ry="7" fill="#78350f" />
+        <!-- Kawaii Pot Face -->
+        <circle cx="135" cy="232" r="4" fill="#431407" />
+        <circle cx="165" cy="232" r="4" fill="#431407" />
+        <circle cx="133.5" cy="230.5" r="1.3" fill="#ffffff" />
+        <circle cx="163.5" cy="230.5" r="1.3" fill="#ffffff" />
+        <!-- Rosy Cheeks -->
+        <ellipse cx="125" cy="238" rx="5" ry="3" fill="#f43f5e" opacity="0.45" />
+        <ellipse cx="175" cy="238" rx="5" ry="3" fill="#f43f5e" opacity="0.45" />
+        <!-- Cute Smile -->
+        <path d="M144 236 Q150 243 156 236" stroke="#431407" stroke-width="2.8" stroke-linecap="round" fill="none" />
+      `;
+
+      let plantTopMarkup = '';
+
+      if (stage === 1) {
+        // Stage 1: Tiny Cute Sprout
+        plantTopMarkup = `
+          <g class="animate-sway">
+            <path d="M150 193 Q150 172 150 162" stroke="#22c55e" stroke-width="5" stroke-linecap="round" fill="none" />
+            <path d="M150 170 C134 156 122 164 132 176 C138 182 147 177 150 170 Z" fill="#4ade80" />
+            <path d="M150 166 C166 152 178 160 168 172 C162 178 153 173 150 166 Z" fill="#22c55e" />
+          </g>
+        `;
+      } else if (stage === 2) {
+        // Stage 2: Taller Stem & 4 Lush Baby Leaves
+        plantTopMarkup = `
+          <g class="animate-sway">
+            <path d="M150 193 Q146 155 150 125" stroke="#16a34a" stroke-width="6" stroke-linecap="round" fill="none" />
+            <!-- Lower Leaves -->
+            <path d="M148 168 C120 154 106 168 122 182 C132 188 144 178 148 168 Z" fill="#4ade80" />
+            <path d="M149 162 C176 148 190 162 174 176 C164 182 152 172 149 162 Z" fill="#22c55e" />
+            <!-- Upper Leaves -->
+            <path d="M149 138 C126 120 112 132 126 146 C135 153 145 146 149 138 Z" fill="#86efac" />
+            <path d="M150 132 C172 114 186 126 172 140 C163 147 153 140 150 132 Z" fill="#4ade80" />
+          </g>
+        `;
+      } else if (stage === 3) {
+        // Stage 3: Branching Stem with Cute Pink Flower Buds
+        plantTopMarkup = `
+          <g class="animate-sway">
+            <path d="M150 193 Q148 145 150 96" stroke="#15803d" stroke-width="6.5" stroke-linecap="round" fill="none" />
+            <path d="M149 148 Q125 135 116 116" stroke="#16a34a" stroke-width="4.5" stroke-linecap="round" fill="none" />
+            <path d="M150 140 Q175 128 184 108" stroke="#16a34a" stroke-width="4.5" stroke-linecap="round" fill="none" />
+            <!-- Lush Foliage -->
+            <path d="M149 168 C118 156 105 172 122 184 C134 189 145 178 149 168 Z" fill="#22c55e" />
+            <path d="M150 162 C180 150 193 166 176 178 C164 183 153 172 150 162 Z" fill="#4ade80" />
+            <!-- Cute Pink Buds -->
+            <ellipse cx="150" cy="88" rx="11" ry="15" fill="#f472b6" />
+            <path d="M141 96 Q150 104 159 96 L150 105 Z" fill="#22c55e" />
+            <ellipse cx="114" cy="110" rx="8" ry="11" fill="#f9a8d4" />
+            <ellipse cx="186" cy="102" rx="8" ry="11" fill="#f9a8d4" />
+          </g>
+        `;
+      } else if (stage === 4) {
+        // Stage 4: Full Blooming Lotus-Rose Flower with Side Blossoms
+        plantTopMarkup = `
+          <g class="animate-sway">
+            <path d="M150 193 Q148 140 150 86" stroke="#15803d" stroke-width="7" stroke-linecap="round" fill="none" />
+            <path d="M149 145 Q120 130 110 108" stroke="#16a34a" stroke-width="4.5" stroke-linecap="round" fill="none" />
+            <path d="M150 138 Q180 124 190 102" stroke="#16a34a" stroke-width="4.5" stroke-linecap="round" fill="none" />
+            <!-- Leaves -->
+            <path d="M149 168 C114 156 102 174 120 186 C134 190 145 178 149 168 Z" fill="#22c55e" />
+            <path d="M150 164 C184 152 196 170 178 182 C164 186 153 174 150 164 Z" fill="#16a34a" />
+            <!-- Side Mini Flowers -->
+            <circle cx="110" cy="104" r="11" fill="#fbcfe8" />
+            <circle cx="110" cy="104" r="5" fill="#fbbf24" />
+            <circle cx="190" cy="98" r="11" fill="#fbcfe8" />
+            <circle cx="190" cy="98" r="5" fill="#fbbf24" />
+            <!-- Main Blooming Lotus Flower -->
+            <g transform="translate(150, 76)">
+              <ellipse cx="-18" cy="4" rx="14" ry="8" transform="rotate(-25 -18 4)" fill="#f472b6" />
+              <ellipse cx="18" cy="4" rx="14" ry="8" transform="rotate(25 18 4)" fill="#f472b6" />
+              <ellipse cx="-11" cy="-6" rx="12" ry="16" transform="rotate(-18 -11 -6)" fill="#f9a8d4" />
+              <ellipse cx="11" cy="-6" rx="12" ry="16" transform="rotate(18 11 -6)" fill="#f9a8d4" />
+              <ellipse cx="0" cy="-10" rx="11" ry="18" fill="#fbcfe8" />
+              <circle cx="0" cy="0" r="9" fill="#fbbf24" />
+              <circle cx="-3" cy="-2" r="1.5" fill="#78350f" />
+              <circle cx="3" cy="-2" r="1.5" fill="#78350f" />
+              <path d="M-2.5 2 Q0 5 2.5 2" stroke="#78350f" stroke-width="1.5" fill="none" stroke-linecap="round" />
+            </g>
+          </g>
+        `;
+      } else {
+        // Stage 5: Magical Glowing Lotus & Musical Tree (14+ Days!)
+        plantTopMarkup = `
+          <g class="animate-sway animate-lotus-glow">
+            <!-- Golden Aura Ring -->
+            <circle cx="150" cy="82" r="54" fill="none" stroke="#fde68a" stroke-width="2.5" stroke-dasharray="6 6" />
+            <!-- Sturdy Tree Trunk & Branches -->
+            <path d="M150 193 Q148 135 150 85" stroke="#15803d" stroke-width="8" stroke-linecap="round" fill="none" />
+            <path d="M149 142 Q115 125 102 98" stroke="#16a34a" stroke-width="5" stroke-linecap="round" fill="none" />
+            <path d="M150 136 Q185 120 198 94" stroke="#16a34a" stroke-width="5" stroke-linecap="round" fill="none" />
+            <!-- Lush Canopy Leaves -->
+            <path d="M149 168 C110 156 98 175 118 187 C134 191 145 178 149 168 Z" fill="#22c55e" />
+            <path d="M150 164 C188 152 200 171 180 183 C164 187 153 174 150 164 Z" fill="#16a34a" />
+            <!-- Twin Side Lotuses -->
+            <circle cx="102" cy="94" r="13" fill="#f9a8d4" />
+            <circle cx="102" cy="94" r="6" fill="#fbbf24" />
+            <circle cx="198" cy="90" r="13" fill="#f9a8d4" />
+            <circle cx="198" cy="90" r="6" fill="#fbbf24" />
+            <!-- Crown Royal Lotus -->
+            <g transform="translate(150, 72)">
+              <ellipse cx="-24" cy="6" rx="17" ry="9" transform="rotate(-25 -24 6)" fill="#ec4899" />
+              <ellipse cx="24" cy="6" rx="17" ry="9" transform="rotate(25 24 6)" fill="#ec4899" />
+              <ellipse cx="-14" cy="-7" rx="14" ry="20" transform="rotate(-18 -14 -7)" fill="#f472b6" />
+              <ellipse cx="14" cy="-7" rx="14" ry="20" transform="rotate(18 14 -7)" fill="#f472b6" />
+              <ellipse cx="0" cy="-12" rx="13" ry="22" fill="#fbcfe8" />
+              <circle cx="0" cy="0" r="11" fill="#f59e0b" />
+              <!-- Cute Crown -->
+              <path d="M-8 -28 L-4 -22 L0 -30 L4 -22 L8 -28 L7 -19 H-7 Z" fill="#fbbf24" />
+            </g>
+            <!-- Sparkles -->
+            <text x="82" y="64" font-size="16">✨</text>
+            <text x="204" y="62" font-size="16">✨</text>
+          </g>
+        `;
+      }
+
+      container.innerHTML = `
+        <svg viewBox="0 0 300 290" class="w-full h-full max-w-[270px] max-h-[270px]">
+          ${plantTopMarkup}
+          ${potMarkup}
+        </svg>
+      `;
+    }
+
+    // -------------------------------------------------------------------------
+    // 8. UI RENDERING FUNCTIONS
+    // -------------------------------------------------------------------------
+    function renderAll() {
+      document.getElementById('studio-title').textContent = appState.studioName;
+      updateSoundToggleUI();
+      renderStats();
+      renderLibrary();
+      renderGardenAndStreak();
+      renderPracticeHistory();
+    }
+
+    function renderStats() {
+      const raagas = appState.items.filter(i => i.type === 'Raaga');
+      const songs = appState.items.filter(i => i.type === 'Song');
+      const mastered = appState.items.filter(i => i.status === 'Mastered');
+
+      document.getElementById('stat-raagas').textContent = raagas.length;
+      document.getElementById('stat-songs').textContent = songs.length;
+      document.getElementById('stat-mastered').textContent = mastered.length;
+      document.getElementById('stat-streak').textContent = appState.streak;
+      document.getElementById('nav-streak-pill').textContent = `${appState.streak}🔥`;
+
+      document.getElementById('count-all').textContent = appState.items.length;
+      document.getElementById('count-raagas').textContent = raagas.length;
+      document.getElementById('count-songs').textContent = songs.length;
+    }
+
+    function renderLibrary() {
+      const container = document.getElementById('library-list');
+      const search = (document.getElementById('library-search').value || '').toLowerCase();
+
+      const filtered = appState.items.filter(item => {
+        const matchesType = currentFilter === 'ALL' || item.type === currentFilter;
+        const matchesQuery =
+          item.title.toLowerCase().includes(search) ||
+          (item.notes && item.notes.toLowerCase().includes(search));
+        return matchesType && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white/80 rounded-3xl border border-dashed border-lotus-200 p-10 text-center">
+            <div class="text-4xl mb-2">🪷</div>
+            <h3 class="font-display text-lg font-bold text-slate-700">No Raagas or Songs found here yet</h3>
+            <p class="text-xs text-slate-500 mt-1">Use the form above to add a Raaga or Song and discover Top 3 YouTube tutorials, recordings & lyrics!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        const isSong = item.type === 'Song';
+        const isMastered = item.status === 'Mastered';
+        const badgeColor = isSong
+          ? 'bg-saffron-100 text-saffron-500 border-saffron-200'
+          : 'bg-lotus-100 text-lotus-500 border-lotus-200';
+
+        // Loading skeleton state
+        if (item.loading) {
+          return `
+            <article class="bg-white/95 rounded-3xl shadow-sm border border-lotus-100 p-6 animate-pulse">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2.5">
+                  <span class="px-3 py-1 rounded-full text-xs font-extrabold border ${badgeColor}">
+                    ${isSong ? '🎤 Song' : '🎼 Raaga'}
+                  </span>
+                  <h3 class="font-display text-xl font-extrabold text-slate-800">${escapeHtml(item.title)}</h3>
+                </div>
+                <span class="text-xs font-bold text-lotus-500">✨ Fetching Guru Resources...</span>
+              </div>
+              <div class="h-24 bg-lotus-50/70 rounded-2xl"></div>
+            </article>
+          `;
+        }
+
+        // Top 3 YouTube Videos HTML
+        const videosHtml = (item.youtubeVideos || []).slice(0, 3).map((vid, idx) => {
+          const ytUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(vid.searchQuery || vid.title)}`;
+          return `
+            <a href="${ytUrl}" target="_blank" rel="noopener noreferrer"
+              class="group block bg-gradient-to-br from-rose-50/60 to-white hover:from-rose-100/70 hover:to-lotus-50/50 rounded-2xl p-3.5 border border-rose-100 transition shadow-xs">
+              <div class="flex items-start justify-between gap-2">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-rose-500 text-white text-xs font-extrabold shrink-0">
+                  ▶ ${idx + 1}
+                </span>
+                <span class="text-[11px] font-bold text-rose-500 group-hover:underline shrink-0">Watch on YouTube ↗</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-800 mt-2 line-clamp-2 group-hover:text-rose-600 transition">
+                ${escapeHtml(vid.title)}
+              </h4>
+              <div class="text-[11px] font-semibold text-slate-500 mt-1">📺 ${escapeHtml(vid.channel)}</div>
+              <p class="text-xs text-slate-600 mt-1.5 line-clamp-2">${escapeHtml(vid.reason)}</p>
+            </a>
+          `;
+        }).join('');
+
+        // Recordings (MP3 / MP4 Reference + Custom Links) HTML
+        const refRecordingsHtml = (item.recordings || []).map(rec => `
+          <a href="${escapeAttr(rec.url)}" target="_blank" rel="noopener noreferrer"
+            class="flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-saffron-50/80 hover:bg-saffron-100/80 border border-saffron-200/70 text-xs font-bold text-slate-700 transition">
+            <span class="flex items-center gap-2 truncate">
+              <span>${rec.format && rec.format.includes('MP3') ? '🎧' : '🎬'}</span>
+              <span class="truncate">${escapeHtml(rec.label)}</span>
+            </span>
+            <span class="px-2 py-0.5 rounded-md bg-white text-saffron-500 text-[10px] font-extrabold shrink-0">${escapeHtml(rec.format || 'Link')} ↗</span>
+          </a>
+        `).join('');
+
+        const customLinksHtml = (item.customLinks || []).map(link => `
+          <div class="flex items-center justify-between gap-2 px-3.5 py-2 rounded-xl bg-sage-50 border border-sage-200 text-xs font-bold text-slate-700">
+            <a href="${escapeAttr(link.url)}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 truncate hover:text-sage-500">
+              <span>🎵</span>
+              <span class="truncate underline">${escapeHtml(link.label)}</span>
+            </a>
+            <button onclick="removeCustomRecording('${item.id}', '${link.id}')" class="text-slate-400 hover:text-rose-500 px-1" title="Remove link">✕</button>
+          </div>
+        `).join('');
+
+        // Song-Only English Lyrics Section OR Raaga-Only Swar Grammar Section
+        let bottomSectionHtml = '';
+        if (isSong && item.lyrics) {
+          bottomSectionHtml = `
+            <div class="mt-4 bg-gradient-to-br from-amber-50/70 via-lotus-50/40 to-white rounded-2xl p-4 border border-amber-200/70">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="font-display text-sm font-extrabold text-amber-800 flex items-center gap-1.5">
+                  <span>📜</span> English Lyrics (Transliteration & Meaning)
+                </h4>
+                <button onclick="copyLyricsText('${item.id}')" class="px-2.5 py-1 rounded-xl bg-white hover:bg-amber-100 text-amber-700 text-xs font-bold border border-amber-200 transition">
+                  📋 Copy Lyrics
+                </button>
+              </div>
+              <pre id="lyrics-text-${item.id}" class="font-sans whitespace-pre-wrap text-sm text-slate-800 leading-relaxed bg-white/80 p-3.5 rounded-xl border border-amber-100">${escapeHtml(item.lyrics.englishLyrics || '')}</pre>
+              ${item.lyrics.meaningSummary ? `
+                <p class="text-xs text-slate-600 mt-2.5 italic bg-amber-100/40 px-3 py-2 rounded-xl">
+                  <strong>✨ Bhav / Meaning:</strong> ${escapeHtml(item.lyrics.meaningSummary)}
+                </p>
+              ` : ''}
+            </div>
+          `;
+        } else if (!isSong && item.ragaGrammar) {
+          const g = item.ragaGrammar;
+          bottomSectionHtml = `
+            <div class="mt-4 bg-gradient-to-br from-lotus-50/70 to-white rounded-2xl p-4 border border-lotus-200/70">
+              <h4 class="font-display text-sm font-extrabold text-lotus-500 flex items-center gap-1.5 mb-2.5">
+                <span>🎼</span> Raaga Swara Structure (No Lyrics — Pure Raaga Grammar)
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs mb-2.5">
+                <div class="bg-white p-2.5 rounded-xl border border-lotus-100">
+                  <span class="text-slate-400 font-bold block">Thaat</span>
+                  <strong class="text-slate-800">${escapeHtml(g.thaat || '-')}</strong>
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-lotus-100">
+                  <span class="text-slate-400 font-bold block">Time (Prahar)</span>
+                  <strong class="text-slate-800">${escapeHtml(g.time || '-')}</strong>
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-lotus-100">
+                  <span class="text-slate-400 font-bold block">Vadi / Samvadi</span>
+                  <strong class="text-slate-800">${escapeHtml(g.vadiSamvadi || '-')}</strong>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                <div class="bg-white p-2.5 rounded-xl border border-lotus-100">
+                  <span class="text-lotus-500 font-bold block">Aroha (Ascending)</span>
+                  <span class="font-mono font-bold text-slate-800">${escapeHtml(g.aroha || '-')}</span>
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-lotus-100">
+                  <span class="text-saffron-500 font-bold block">Avaroha (Descending)</span>
+                  <span class="font-mono font-bold text-slate-800">${escapeHtml(g.avaroha || '-')}</span>
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-lotus-100">
+                  <span class="text-sage-500 font-bold block">Pakad (Catch Phrase)</span>
+                  <span class="font-mono font-bold text-slate-800">${escapeHtml(g.pakad || '-')}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <article class="bg-white/95 backdrop-blur-md rounded-3xl shadow-sm border border-lotus-100 p-5 sm:p-6 transition hover:shadow-md">
+            <!-- Card Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="px-3 py-1 rounded-full text-xs font-extrabold border ${badgeColor}">
+                    ${isSong ? '🎤 Song' : '🎼 Raaga'}
+                  </span>
+                  <h3 class="font-display text-xl sm:text-2xl font-extrabold text-slate-800">${escapeHtml(item.title)}</h3>
+                  <button onclick="toggleItemStatus('${item.id}')"
+                    class="px-3 py-1 rounded-full text-xs font-extrabold transition cursor-pointer ${
+                      isMastered
+                        ? 'bg-amber-100 text-amber-700 border border-amber-300'
+                        : 'bg-sage-100 text-sage-500 border border-sage-200'
+                    }">
+                    ${isMastered ? '⭐ Mastered' : '🌱 Learning'}
+                  </button>
+                </div>
+                ${item.notes ? `<p class="text-xs text-slate-500 font-medium mt-1.5">📝 ${escapeHtml(item.notes)}</p>` : ''}
+              </div>
+
+              <!-- Card Action Buttons -->
+              <div class="flex items-center gap-2 self-start sm:self-center">
+                <button onclick="refreshItemResources('${item.id}')"
+                  class="px-3 py-1.5 rounded-xl bg-lotus-50 hover:bg-lotus-100 text-lotus-500 text-xs font-bold border border-lotus-200 transition">
+                  🔄 Refresh Resources
+                </button>
+                <button onclick="deleteItem('${item.id}')"
+                  class="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition" title="Delete entry">
+                  🗑️
+                </button>
+              </div>
+            </div>
+
+            <!-- Top 3 YouTube Recommendations -->
+            <div class="mt-4">
+              <h4 class="font-display text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2.5 flex items-center gap-1.5">
+                <span>📺</span> Top 3 Best YouTube Videos for "${escapeHtml(item.title)}"
+              </h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                ${videosHtml}
+              </div>
+            </div>
+
+            <!-- MP3 / MP4 Recordings & Personal Links -->
+            <div class="mt-4">
+              <h4 class="font-display text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2.5 flex items-center gap-1.5">
+                <span>🎧</span> Recordings (MP3 / MP4 Links) & Your Saved Tracks
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-3">
+                ${refRecordingsHtml}
+                ${customLinksHtml}
+              </div>
+
+              <!-- Add Custom MP3/MP4 URL Form -->
+              <form onsubmit="handleAddCustomRecording(event, '${item.id}')" class="flex flex-col sm:flex-row gap-2">
+                <input id="rec-label-${item.id}" type="text" placeholder="Label (e.g., Guru's MP3 recording)"
+                  class="sm:w-1/3 px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-saffron-300" />
+                <input id="rec-url-${item.id}" type="text" required placeholder="Paste MP3, MP4, Google Drive, or YouTube link..."
+                  class="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-saffron-300" />
+                <button type="submit"
+                  class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition shrink-0">
+                  + Save Recording Link
+                </button>
+              </form>
+            </div>
+
+            <!-- Lyrics (Only for Songs) OR Raaga Swaras (Only for Raagas) -->
+            ${bottomSectionHtml}
+          </article>
+        `;
+      }).join('');
+    }
+
+    function renderGardenAndStreak() {
+      const stageInfo = getPlantStageInfo(appState.streak);
+      document.getElementById('plant-stage-badge').textContent = stageInfo.name;
+      document.getElementById('garden-streak-count').textContent = appState.streak;
+      document.getElementById('garden-best-streak').textContent = appState.bestStreak;
+      document.getElementById('next-stage-label').textContent = stageInfo.nextLabel;
+      document.getElementById('next-stage-pct').textContent = `${stageInfo.pct}%`;
+      document.getElementById('plant-progress-bar').style.width = `${stageInfo.pct}%`;
+      document.getElementById('plant-encouragement').textContent = stageInfo.message;
+
+      renderPlantSVG(stageInfo.stage);
+
+      // Render 2 Weekly Cute Streak Guards
+      const guardsLeft = Math.max(0, 2 - appState.guardsUsedThisWeek);
+      document.getElementById('guards-left-badge').textContent = `${guardsLeft} / 2 Left`;
+
+      const iconsRow = document.getElementById('guard-icons-row');
+      let iconsHtml = '';
+      for (let i = 0; i < 2; i++) {
+        const isAvailable = i < guardsLeft;
+        iconsHtml += isAvailable
+          ? `<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-sky-200 shadow-xs text-xs font-extrabold text-sky-600 animate-bounce-soft" style="animation-delay:${i * 0.4}s">
+               <span>☂️</span> Guard #${i + 1}
+             </div>`
+          : `<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs font-bold text-slate-400 line-through">
+               <span>🌂</span> Used
+             </div>`;
+      }
+      iconsRow.innerHTML = iconsHtml;
+
+      const useBtn = document.getElementById('use-guard-btn');
+      const today = getLocalDateStr(new Date());
+      if (appState.lastActiveDate === today) {
+        useBtn.textContent = '✅ Today Protected / Practiced';
+        useBtn.disabled = true;
+        useBtn.className = 'px-4 py-2 rounded-2xl text-xs font-extrabold bg-sage-100 text-sage-500 border border-sage-200 cursor-default';
+      } else if (guardsLeft === 0) {
+        useBtn.textContent = '0 Guards Left This Week';
+        useBtn.disabled = true;
+        useBtn.className = 'px-4 py-2 rounded-2xl text-xs font-extrabold bg-slate-200 text-slate-500 cursor-not-allowed';
+      } else {
+        useBtn.innerHTML = '<span>🛡️</span> Protect Today\'s Streak';
+        useBtn.disabled = false;
+        useBtn.className = 'px-4 py-2 rounded-2xl text-xs font-extrabold text-white bg-gradient-to-r from-sky-400 to-lotus-400 hover:opacity-95 shadow-sm transition flex items-center gap-1.5 cursor-pointer';
+      }
+    }
+
+    function renderPracticeHistory() {
+      const list = document.getElementById('practice-history-list');
+      const totalMins = appState.practiceLogs.reduce((sum, l) => sum + (l.minutes || 0), 0);
+      const actualSessions = appState.practiceLogs.filter(l => !l.isGuard).length;
+
+      document.getElementById('total-riyaz-mins').textContent = totalMins;
+      document.getElementById('total-riyaz-sessions').textContent = actualSessions;
+
+      if (appState.practiceLogs.length === 0) {
+        list.innerHTML = `
+          <div class="col-span-full text-center py-8 bg-sage-50/50 rounded-2xl border border-dashed border-sage-200">
+            <p class="text-sm font-bold text-slate-600">No Riyaz sessions logged yet!</p>
+            <p class="text-xs text-slate-500 mt-1">Log your first practice above to water your sprout 🌱</p>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = appState.practiceLogs.slice(0, 12).map(log => {
+        if (log.isGuard) {
+          return `
+            <div class="p-3.5 rounded-2xl bg-sky-50/80 border border-sky-200 flex items-center justify-between gap-2">
+              <div>
+                <div class="text-xs font-extrabold text-sky-600">☂️ Streak Guard Used</div>
+                <div class="text-[11px] text-slate-500 mt-0.5">${escapeHtml(log.date)}</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-xl bg-white text-sky-600 text-xs font-extrabold border border-sky-100">Safe 🛡️</span>
+            </div>
+          `;
+        }
+        return `
+          <div class="p-3.5 rounded-2xl bg-gradient-to-br from-sage-50/80 to-white border border-sage-200/80 flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <div class="text-xs font-extrabold text-slate-800 truncate">🎵 ${escapeHtml(log.focus)}</div>
+              <div class="text-[11px] font-semibold text-slate-500 mt-0.5">📅 ${escapeHtml(log.date)}</div>
+            </div>
+            <span class="px-3 py-1 rounded-xl bg-sage-100 text-sage-500 text-xs font-extrabold shrink-0">
+              ${log.minutes}m
+            </span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // -------------------------------------------------------------------------
+    // 9. TABS, MODALS, CLIPBOARD, BACKUP & TOAST NOTIFICATIONS
+    // -------------------------------------------------------------------------
+    function switchTab(tab) {
+      currentTab = tab;
+      const libView = document.getElementById('view-library');
+      const riyazView = document.getElementById('view-riyaz');
+      const libBtn = document.getElementById('tab-btn-library');
+      const riyazBtn = document.getElementById('tab-btn-riyaz');
+
+      if (tab === 'library') {
+        libView.classList.remove('hidden');
+        riyazView.classList.add('hidden');
+        libBtn.className = 'flex-1 py-3 px-4 rounded-2xl font-display font-bold text-sm sm:text-base flex items-center justify-center gap-2 transition-all bg-gradient-to-r from-lotus-400 to-saffron-400 text-white shadow-md';
+        riyazBtn.className = 'flex-1 py-3 px-4 rounded-2xl font-display font-bold text-sm sm:text-base flex items-center justify-center gap-2 transition-all text-slate-600 hover:bg-lotus-50';
+      } else {
+        libView.classList.add('hidden');
+        riyazView.classList.remove('hidden');
+        riyazBtn.className = 'flex-1 py-3 px-4 rounded-2xl font-display font-bold text-sm sm:text-base flex items-center justify-center gap-2 transition-all bg-gradient-to-r from-sage-500 to-emerald-500 text-white shadow-md';
+        libBtn.className = 'flex-1 py-3 px-4 rounded-2xl font-display font-bold text-sm sm:text-base flex items-center justify-center gap-2 transition-all text-slate-600 hover:bg-lotus-50';
+      }
+    }
+
+    function openNameModal() {
+      const modal = document.getElementById('name-modal');
+      document.getElementById('studio-name-input').value = appState.studioName;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeNameModal() {
+      const modal = document.getElementById('name-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function saveStudioName() {
+      const val = document.getElementById('studio-name-input').value.trim();
+      if (val) {
+        appState.studioName = val;
+        saveState();
+        renderAll();
+        showToast('✨ Studio name updated!', 'success');
+      }
+      closeNameModal();
+    }
+
+    function copyLyricsText(itemId) {
+      const el = document.getElementById(`lyrics-text-${itemId}`);
+      if (!el) return;
+      const textarea = document.createElement('textarea');
+      textarea.value = el.textContent;
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast('📋 Lyrics copied to clipboard!', 'success');
+      } catch (e) {
+        showToast('Could not copy lyrics.', 'error');
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function exportBackupJSON() {
+      const blob = new Blob([JSON.stringify(appState, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `raga-riyaz-backup-${getLocalDateStr(new Date())}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('💾 Downloaded your studio backup JSON!', 'success');
+    }
+
+    function triggerMiniConfetti() {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 65,
+          spread: 70,
+          origin: { y: 0.7 },
+          colors: ['#f472b6', '#fb923c', '#4ade80', '#fbbf24']
+        });
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const styles = type === 'success'
+        ? 'bg-emerald-600 text-white border-emerald-400'
+        : type === 'error'
+          ? 'bg-rose-600 text-white border-rose-400'
+          : 'bg-slate-800 text-white border-slate-600';
+
+      toast.className = `pointer-events-auto px-4 py-3 rounded-2xl shadow-lg border text-xs sm:text-sm font-semibold transform transition-all duration-300 ${styles}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 4200);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function escapeAttr(str) {
+      return escapeHtml(str);
+    }
+
+    // Boot Application
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('practice-date').value = getLocalDateStr(new Date());
+      loadState();
+      renderAll();
+    });
+  </script>
+</body>
+</html>
